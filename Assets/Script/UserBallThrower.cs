@@ -32,7 +32,7 @@ public class UserBallThrower : BallThrower
 {
     public static event System.Action<ShotData> OnShotDataSet = null;
     public static event System.Action OnAimingStart = null;
-    public static event System.Action OnAimingInProgress = null;
+    public static event System.Action<Vector2> OnAimingInProgress = null;
     public static event System.Action OnAimingEnded = null;
 
 
@@ -143,7 +143,9 @@ public class UserBallThrower : BallThrower
             return;
         }
 
-        Vector2 currentMouseDelta = (Vector2)Input.mousePosition - m_MouseV2OnMousePressed;
+        Vector2 mousePosV2 = Input.mousePosition;
+        
+        Vector2 currentMouseDelta = mousePosV2 - m_MouseV2OnMousePressed;
 
         if (currentMouseDelta.magnitude > m_PreviousMouseDelta.magnitude)
         {
@@ -160,7 +162,7 @@ public class UserBallThrower : BallThrower
             m_DEBUG_ShootSlider.value = m_CurrentForceV3.magnitude;
         }
 
-        CallEvent(OnAimingInProgress);
+        CallEvent(OnAimingInProgress, mousePosV2);
     }
 
     private void OnLeftMouseButtonReleased()
