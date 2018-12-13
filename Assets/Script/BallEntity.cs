@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 
-public struct BallScoreData
+public struct BallShotData
 {
     public BallThrower thrower;
     public ShotStatus status;
 
-    public static BallScoreData Default
+    public static BallShotData Default
     {
-        get { return new BallScoreData(null, ShotStatus.NONE); }
+        get { return new BallShotData(null, ShotStatus.NONE); }
     }
 
-    public BallScoreData(BallThrower thrower, ShotStatus status)
+    public BallShotData(BallThrower thrower, ShotStatus status)
     {
         this.thrower = thrower;
         this.status = status;
@@ -20,10 +20,10 @@ public struct BallScoreData
 
 public class BallEntity : BaseEntity
 {
-    public static event System.Action<BallScoreData> OnScore = null;
+    public static event System.Action<BallShotData> OnScore = null;
     public event System.Action<ShotStatus> OnReadyToBeShot = null;
 
-    private BallScoreData m_CurrentThrowScore = BallScoreData.Default;
+    private BallShotData m_CurrentThrowScore = BallShotData.Default;
     public ShotStatus CurrentThrowScoreStatus
     {
         get { return m_CurrentThrowScore.status; }

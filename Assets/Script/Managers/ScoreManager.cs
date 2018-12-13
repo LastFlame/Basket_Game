@@ -9,8 +9,25 @@ public enum ShotStatus
     FAILED = 1 << 3
 }
 
+public struct ScoreData
+{
+    public BallThrower thrower;
+    public int nCurrentShotScore;
+    public int nTotalThrowerScore;
+
+    public ScoreData(BallThrower thrower, int nCurrentShotScore, int nTotalThrowerScore)
+    {
+        this.thrower = thrower;
+        this.nCurrentShotScore = nCurrentShotScore;
+        this.nTotalThrowerScore = nTotalThrowerScore;
+    }
+
+}
+
 public class ScoreManager : BaseEntity
 {
+    public static event System.Action<ScoreData> OnScoreDataSet = null;
+
     private struct Score
     {
         public static Score Default
@@ -35,6 +52,11 @@ public class ScoreManager : BaseEntity
         BallEntity.OnScore += OnBallScore;
     }
 
+    private void OnDestroy()
+    {
+        BallEntity.OnScore -= OnBallScore;
+    }
+
     private int GetScoreFromStatus(ShotStatus shotStauts)
     {
         if(shotStauts == ShotStatus.FAILED)
@@ -55,18 +77,27 @@ public class ScoreManager : BaseEntity
         return (int)Constant.ShotScores.NORMAL;
     }
 
-    private void OnBallScore(BallScoreData scoreInformation)
+    private void OnBallScore(BallShotData scoreInformation)
     {
-        string debugMessage = " scored. {0}";
-        if(scoreInformation.thrower.GetType() == typeof(UserBallThrower))
+        int nShotScore = GetScoreFromStatus(scoreInformation.status);
+        BallThrower thrower = scoreInformation.thrower;
+        
+        int nThrowerTotalScore = 0;
+        if(thrower.GetType() == typeof(UserBallThrower))
         {
-            m_Score.playerScore += GetScoreFromStatus(scoreInformation.status);
-            LogMessage("player" + debugMessage, m_Score.playerScore);
-            return;
+            m_Score.playerScore += nShotScore;
+            nThrowerTotalScore = m_Score.playerScore;
+        }
+        else
+        {
+            m_Score.AIScore += nShotScore;
+            nThrowerTotalScore = m_Score.AIScore;
         }
 
-        m_Score.AIScore += GetScoreFromStatus(scoreInformation.status);
-        LogMessage("ai" + debugMessage, m_Score.AIScore);
+        CallEvent(OnScoreDataSet, new ScoreData(thrower, nShotScore, nThrowerTotalScore));
+
     }
+
+
 
 }

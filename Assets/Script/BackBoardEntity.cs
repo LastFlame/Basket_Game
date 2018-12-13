@@ -94,7 +94,7 @@ public class BackBoardEntity : BaseEntity
         ball.CurrentThrowScoreStatus = m_ScoreBonusIsActive ? ball.CurrentThrowScoreStatus | ShotStatus.BONUS | ShotStatus.NORMAL : ShotStatus.NORMAL;
     }
 
-    private void BonusChance(BallScoreData scoreData)
+    private void BonusChance(BallShotData scoreData)
     {
         if (!m_ScoreBonusIsActive && m_ChanceOfBonus >= Random.Range(0f, 1f))
         {
