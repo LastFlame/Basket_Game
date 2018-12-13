@@ -1,6 +1,6 @@
 ﻿public static class Constant
 {
-    public const string BallTarget = "Ball_Target";
+    public const string MOVING_SCORE_TEMPLATE = "+{0} pts!";
 
     public enum ShotScores
     {
