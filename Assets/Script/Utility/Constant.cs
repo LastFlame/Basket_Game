@@ -10,6 +10,13 @@
         EXTRA_BONUS = 5
     }
 
+    public enum GameScenes
+    {
+        MAIN_MENU,
+        SOLO_PRATICE,
+        SHOOTING_RACE
+    }
+
     public static UnityEngine.Vector3 GetProjectileVelocity(UnityEngine.Vector3 destinationV3, UnityEngine.Vector3 startV3, float maxHeight)
     {
         float deltaY = destinationV3.y - startV3.y;

@@ -2,6 +2,8 @@
 
 public class CameraEntity : BaseEntity
 {
+    [SerializeField]
+    private Transform m_CameraToMove = null;
 
     [SerializeField]
     private Vector3 m_OffsetOnEndV3 = new Vector3(0, -1f, 2f);
@@ -22,13 +24,15 @@ public class CameraEntity : BaseEntity
 
     private void Awake()
     {
+        if(m_CameraToMove == null)
+        {
+            base.LogCriticalError("MISSING CAMERA TO MOVE REF ON {0}", this.gameObject.name.ToUpper());
+            return;
+        }
+
         m_OnBallThrownLateUpdate = LateUpdateCoroutine();
         UserBallThrower.OnShotDataSet += OnUserThrowerReadyToShot;
         UserBallThrower.OnAimingEnded += OnBallThrown;
-    }
-
-    private void Start()
-    {
     }
 
     private void OnDestroy()
@@ -41,13 +45,13 @@ public class CameraEntity : BaseEntity
     {
         float startTime = Time.time;
 
-        while (this.transform.position != m_EndV3)
+        while (m_CameraToMove.position != m_EndV3)
         {
             m_EndDistanceCovered = (Time.time - startTime) * m_Speed;
             float journeyTime = m_EndDistanceCovered / m_EndDistanceToCover;
 
-            this.transform.localPosition = Vector3.Lerp(this.transform.localPosition, m_EndV3, journeyTime);
-            this.transform.rotation = Quaternion.Lerp(this.transform.rotation, m_QuatToReach, journeyTime);
+            m_CameraToMove.localPosition = Vector3.Lerp(m_CameraToMove.localPosition, m_EndV3, journeyTime);
+            m_CameraToMove.localRotation = Quaternion.Lerp(m_CameraToMove.localRotation, m_QuatToReach, journeyTime);
             yield return new WaitForEndOfFrame();
         }
 
@@ -74,23 +78,24 @@ public class CameraEntity : BaseEntity
         Vector3 dirEndV3ToStartV3 = data.spotV3 - data.targetV3;
         dirEndV3ToStartV3.y = m_OffSetOnStartV3.y;
         dirEndV3ToStartV3.Normalize();
-        this.transform.position = data.spotV3 - (dirEndV3ToStartV3 * (m_OffSetOnStartV3.z));
+        m_CameraToMove.localPosition = data.spotV3 - (dirEndV3ToStartV3 * (m_OffSetOnStartV3.z));
 
         //set camera initial rot.
-        Vector3 dirCameraToEndV3 = (data.targetV3 - this.transform.position).normalized;
+        Vector3 dirCameraToEndV3 = (data.targetV3 - m_CameraToMove.localPosition).normalized;
         dirCameraToEndV3.y = 0;
-        this.transform.forward = dirCameraToEndV3;
+        m_CameraToMove.forward = dirCameraToEndV3;
 
         //set camera final offset.
-        Vector3 dirEndV3ToCamera = this.transform.position - data.targetV3;
+        Vector3 dirEndV3ToCamera = m_CameraToMove.localPosition - data.targetV3;
         dirEndV3ToCamera.y = m_OffsetOnEndV3.y;
         dirEndV3ToCamera.Normalize();
         m_EndV3 = data.targetV3 + (dirEndV3ToCamera * (m_OffsetOnEndV3.z));
         m_EndDistanceToCover = m_EndV3.magnitude;
 
         //set camera final rot.
-        Vector3 localEulerAngles = this.transform.rotation.eulerAngles;
-        m_QuatToReach = Quaternion.RotateTowards(this.transform.localRotation, Quaternion.Euler(30f, localEulerAngles.y, localEulerAngles.z), 50f);
+        Vector3 localEulerAngles = m_CameraToMove.localRotation.eulerAngles;
+        m_QuatToReach = Quaternion.RotateTowards(m_CameraToMove.localRotation, Quaternion.Euler(30f, localEulerAngles.y, localEulerAngles.z), 50f);
     }
 
 }
+

@@ -21,7 +21,7 @@ public class DrawMouseTrail : BaseEntity
     private void OnDestroy()
     {
         UserBallThrower.OnAimingInProgress -= DrawTrail;
-        UserBallThrower.OnAimingStart -= ResetTrail;
+        UserBallThrower.OnAimingEnded -= ResetTrail;
     }
 
     private void ResetTrail()
@@ -29,10 +29,8 @@ public class DrawMouseTrail : BaseEntity
         m_TrailRenderer.Clear();
     }
 
-    private void DrawTrail(Vector2 mousePosition)
+    private void DrawTrail(Vector2 mousePosition, float currentForce)
     {
         this.transform.position = m_MainCamera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, m_MainCamera.nearClipPlane + 1));
-
-        
     }
 }

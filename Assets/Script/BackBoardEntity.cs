@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(CollisionEntity))]
-public class BackBoardEntity : BaseEntity
+public class BackBoardEntity : BaseEntity, IPauseEntity
 {
     private static Constant.ShotScores m_CurrentScoreBonus = Constant.ShotScores.NORMAL_BONUS;
     public static Constant.ShotScores GetCurrentScoreBonus
     {
         get { return m_CurrentScoreBonus; }
     }
+
 
     [SerializeField]
     private float m_ChanceOfBonus = 0.1f;
@@ -27,9 +28,26 @@ public class BackBoardEntity : BaseEntity
     private CollisionEntity m_CollisionEntity = null;
     private SpriteRenderer m_CurrentBonusSprite = null;
 
+    private bool m_IsPaused = false;
+    public bool IsPaused
+    {
+        get { return m_IsPaused; }
+
+    }
+
     private System.Collections.IEnumerator OnBonusActiveUpdate = null;
     private bool m_ScoreBonusIsActive = false;
 
+
+    public void OnPause()
+    {
+        m_IsPaused = true;
+    }
+
+    public void OnUnPause()
+    {
+        m_IsPaused = false;
+    }
 
     private void Awake()
     {
@@ -53,6 +71,7 @@ public class BackBoardEntity : BaseEntity
     private void OnDestroy()
     {
         m_CollisionEntity.OnCollisionEvent -= CollectCollisionInformation;
+        BallEntity.OnScore -= BonusChance;
     }
 
     private System.Collections.IEnumerator BonusActiveUpdate()
@@ -65,6 +84,12 @@ public class BackBoardEntity : BaseEntity
 
         while (true)
         {
+            if(m_IsPaused)
+            {
+                yield return null;
+                continue;
+            }
+            
             bonusMultiplierSpriteColor = m_BonusMultiplierSprite.color;
 
             if (bonusMultiplierSpriteColor.a >= 1 || bonusMultiplierSpriteColor.a <= 0)

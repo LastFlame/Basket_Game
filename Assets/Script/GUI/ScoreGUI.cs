@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class ScoreGUI : BaseEntity
+public class ScoreGUI : BaseEntity, IPauseEntity
 {
     [SerializeField]
     private Text m_PlayerScore = null;
@@ -12,9 +12,26 @@ public class ScoreGUI : BaseEntity
     [SerializeField]
     private Text m_MovingScore = null;
 
+    private bool m_IsPaused = false;
+    public bool IsPaused
+    {
+        get { return m_IsPaused; }
+    }
+
     private RectTransform m_MovingScoreTransform = null;
     private System.Collections.IEnumerator m_OnMovingScore = null;
     private Vector3 m_MovingScoreInitialV2 = Vector3.zero;
+
+    public void OnPause()
+    {
+        m_IsPaused = true;
+    }
+
+    public void OnUnPause()
+    {
+        m_IsPaused = false;
+    }
+
 
     private void Awake()
     {
@@ -48,6 +65,12 @@ public class ScoreGUI : BaseEntity
 
         while (maxTime > 0)
         {
+            if(m_IsPaused)
+            {
+                yield return null;
+                continue;
+            }
+
             m_MovingScoreTransform.localPosition += (movingScoreDir * speed * Time.deltaTime);
             maxTime -= Time.deltaTime;
             yield return null;
@@ -75,4 +98,6 @@ public class ScoreGUI : BaseEntity
         SetScoreText(m_AIScore,totalScore);
 
     }
+
+
 }

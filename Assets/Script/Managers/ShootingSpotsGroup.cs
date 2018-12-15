@@ -27,15 +27,10 @@ public class ShootingSpotsGroup : BaseEntity
             return;
         }
 
+        m_ShootingSpots = transform.GetComponentsInChildren<ShootingSpotEntity>();
         m_BallThrower.OnThrowEntityReady += SetThrowParameters;
 
     }
-
-    private void Start()
-    {
-        m_ShootingSpots = transform.GetComponentsInChildren<ShootingSpotEntity>();
-    }
-
 
     private void SetThrowParameters(ShotStatus stauts)
     {

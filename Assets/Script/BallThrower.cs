@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class BallThrower : BaseEntity
+public class BallThrower : BaseEntity, IPauseEntity
 {
     public event System.Action<ShotStatus> OnThrowEntityReady = null;
 
@@ -9,6 +9,24 @@ public class BallThrower : BaseEntity
 
     protected Vector3 m_CurrentForceV3 = Vector3.zero;
     protected ShotData m_PreviouseShotData = ShotData.Default;
+
+    protected bool m_IsPaused = false;
+
+    public bool IsPaused
+    {
+        get { return m_IsPaused; }
+
+    }
+
+    public virtual void OnPause()
+    {
+        m_IsPaused = true;
+    }
+
+    public virtual void OnUnPause()
+    {
+        m_IsPaused = false;
+    }
 
     public virtual void SetNextShot(ShotData data)
     {
@@ -41,4 +59,6 @@ public class BallThrower : BaseEntity
     {
         CallEvent(OnThrowEntityReady, status);
     }
+
+
 }

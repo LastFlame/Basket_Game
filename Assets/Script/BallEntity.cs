@@ -18,7 +18,7 @@ public struct BallShotData
 
 }
 
-public class BallEntity : BaseEntity
+public class BallEntity : BaseEntity, IPauseEntity
 {
     public static event System.Action<BallShotData> OnScore = null;
     public event System.Action<ShotStatus> OnReadyToBeShot = null;
@@ -31,8 +31,52 @@ public class BallEntity : BaseEntity
         set { m_CurrentThrowScore.status = value; }
     }
 
+    private bool m_IsPaused = false;
+    public bool IsPaused
+    {
+        get { return m_IsPaused; }
+    }
 
     private Rigidbody m_EntityRb = null;
+
+    private Vector3 m_BeforePauseVelocity = Vector3.zero;
+    private Vector3 m_BeforePauseAngularVelocity = Vector3.zero;
+
+    private bool m_BeforePauseGravityUse = false;
+
+    public void OnPause()
+    {
+        m_IsPaused = true;
+
+        //meaning the ball hasn't be thorwn.
+        if(!m_EntityRb.useGravity)
+        {
+            m_BeforePauseGravityUse = false;
+            return;
+        }
+
+        m_BeforePauseVelocity = m_EntityRb.velocity;
+        m_BeforePauseAngularVelocity = m_EntityRb.angularVelocity;
+        m_BeforePauseGravityUse = true;
+        m_EntityRb.useGravity = false;
+        m_EntityRb.velocity = Vector3.zero;
+    }
+
+    public void OnUnPause()
+    {
+        m_IsPaused = false;
+
+        //don't reset rb parameters if the status before,
+        //the pause was still.
+        if(!m_BeforePauseGravityUse)
+        {
+            return;
+        }
+
+        m_EntityRb.useGravity = true;
+        m_EntityRb.velocity = m_BeforePauseVelocity;
+        m_EntityRb.angularVelocity = m_BeforePauseAngularVelocity;
+    }
 
     public void Shoot(Vector3 force, BallThrower thrower)
     {
@@ -45,12 +89,6 @@ public class BallEntity : BaseEntity
         m_CurrentThrowScore.thrower = thrower;
 
         m_CurrentThrowScore.status = ShotStatus.NONE;
-
-        base.LogMessage("ball end force: {0}", force);
-        base.LogMessage("balle end magnitude {0}", force.magnitude);
-
-
-
     }
 
     public void ResetPosition(ShotData data)
@@ -58,6 +96,7 @@ public class BallEntity : BaseEntity
         m_EntityRb.useGravity = false;
         m_EntityRb.velocity = Vector3.zero;
         m_EntityRb.angularVelocity = Vector3.zero;
+
         this.transform.position = data.spotV3;
         this.transform.rotation = data.spotQuat;
     }
@@ -82,6 +121,7 @@ public class BallEntity : BaseEntity
     {
         m_EntityRb.useGravity = false;
         CallEvent(OnReadyToBeShot, m_CurrentThrowScore.status);
+
     }
 
 
