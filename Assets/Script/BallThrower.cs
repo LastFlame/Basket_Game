@@ -39,11 +39,16 @@ public class BallThrower : BaseEntity, IPauseEntity
     protected ShotData m_PreviouseShotData = ShotData.Default;
 
     protected bool m_IsPaused = false;
-
     public bool IsPaused
     {
         get { return m_IsPaused; }
 
+    }
+
+    protected bool m_IsReadyToBeStopped = true;
+    public bool IsReadyToBeStopped
+    {
+        get { return m_IsReadyToBeStopped; }
     }
 
     public virtual void OnPause()

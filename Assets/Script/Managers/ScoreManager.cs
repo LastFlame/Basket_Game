@@ -28,7 +28,8 @@ public class ScoreManager : BaseEntity
 {
     public static event System.Action<ScoreData> OnScoreDataSet = null;
 
-    private struct Score
+
+    public struct Score
     {
         public static Score Default
         {
@@ -45,16 +46,22 @@ public class ScoreManager : BaseEntity
         public int AIScore;
     }
 
-    private Score m_Score = Score.Default;
+    private static Score m_Score = Score.Default;
 
     private void Start()
     {
+        m_Score = Score.Default;
         BallEntity.OnScore += OnBallScore;
     }
 
     private void OnDestroy()
     {
         BallEntity.OnScore -= OnBallScore;
+    }
+
+    public static Score RetriveMatchScore()
+    {
+        return m_Score;
     }
 
     private int GetScoreFromStatus(ShotStatus shotStauts)
@@ -97,7 +104,5 @@ public class ScoreManager : BaseEntity
         CallEvent(OnScoreDataSet, new ScoreData(thrower, nShotScore, nThrowerTotalScore));
 
     }
-
-
 
 }

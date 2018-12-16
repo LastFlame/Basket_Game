@@ -5,7 +5,7 @@ public struct InputObserverData
 {
     public static InputObserverData DefaultData
     {
-        get { return new InputObserverData(HandledInputs.LEFT_MOUSE_BUTTON_HELD_DOWN, null); }
+        get { return new InputObserverData(HandledInputs.LEFT_MOUSE_BUTTON_PRESSED, null); }
     }
 
     public static bool operator ==(InputObserverData first, InputObserverData second)
@@ -16,6 +16,7 @@ public struct InputObserverData
     public static bool operator !=(InputObserverData first, InputObserverData second)
     {
         return (first.input == second.input) && (first.method == second.method);
+        
     }
 
     public HandledInputs input;
@@ -26,6 +27,17 @@ public struct InputObserverData
         this.input = input;
         this.method = method;
     }
+
+    public override bool Equals(object obj)
+    {
+        return base.Equals(obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
+
 }
 
 public class InputObserver
@@ -74,7 +86,7 @@ public class InputObserver
         InputObserverData dataToRemove = m_InputObserverDatas
                                          .FirstOrDefault(storedNotification => storedNotification == data);
 
-        if(dataToRemove == null)
+        if(dataToRemove == InputObserverData.DefaultData)
         {
             return;
         }

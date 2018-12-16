@@ -10,6 +10,9 @@
         EXTRA_BONUS = 5
     }
 
+    /// <summary>
+    /// This enum matchs the build index of your scene on Unity.
+    /// </summary>
     public enum GameScenes
     {
         MAIN_MENU,

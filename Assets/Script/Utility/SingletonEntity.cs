@@ -11,10 +11,10 @@
         if(m_Instance == null)
         {
             m_Instance = GetComponent<T>();
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(this.gameObject);
             return;
         }
 
-        Destroy(this);
+        Destroy(this.gameObject);
     }
 }

@@ -24,6 +24,7 @@ public class UserBallThrower : BallThrower
     {
         base.SetNextShot(data);
 
+        m_IsReadyToBeStopped = true;
         m_CurrentAimingTime = 0;
         m_CurrentForceV3 = Vector3.zero;
 
@@ -124,6 +125,13 @@ public class UserBallThrower : BallThrower
         //want that.
         if (currentMouseMagnitude > m_PreviouseMouseDeltaMagnitude)
         {
+            //avoid the game over manager to invoke change scene,
+            //while the player is aiming for the last time.
+            if(m_IsReadyToBeStopped)
+            {
+                m_IsReadyToBeStopped = false;
+            }
+
             //store the previous mouse delta magnitude for the next frame.
             m_PreviouseMouseDeltaMagnitude = currentMouseMagnitude;
 

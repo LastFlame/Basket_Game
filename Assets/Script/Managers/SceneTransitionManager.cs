@@ -28,7 +28,6 @@ public class SceneTransitionManager : SingletonEntity<SceneTransitionManager>
 
     public void StartSceneTransition(Constant.GameScenes scene)
     {
-
         if(m_IsExecutingSceneLoading)
         {
             return;
@@ -41,7 +40,6 @@ public class SceneTransitionManager : SingletonEntity<SceneTransitionManager>
 
         m_IsExecutingSceneLoading = true;
         StartCoroutine(LoadSceneAsync(scene));
-        
     }
 
 }
