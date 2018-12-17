@@ -1,7 +1,5 @@
 ﻿public static class Constant
 {
-    public const string MOVING_SCORE_TEMPLATE = "+{0} pts!";
-
     public enum ShotScores
     {
         PERFECT = 3,
@@ -28,6 +26,9 @@
         HARD
     }
 
+    public const string MOVING_SCORE_TEMPLATE = "+{0} pts!";
+    public const int ON_FIRE_SCORE_MULTIPLIER = 2;
+
     public static UnityEngine.Vector3 GetProjectileVelocity(UnityEngine.Vector3 destinationV3, UnityEngine.Vector3 startV3, float maxHeight)
     {
         float deltaY = destinationV3.y - startV3.y;
@@ -44,7 +45,6 @@
 
         return velocityZ + velocityY * -UnityEngine.Mathf.Sign(gravity);
     }
-
 
     public static float NormalizedData (float value, float min, float max)
     {

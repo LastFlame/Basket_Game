@@ -51,6 +51,9 @@ public class BallThrower : BaseEntity, IPauseEntity
         get { return m_IsReadyToBeStopped; }
     }
 
+    protected bool m_IsOnFireEffectActive = false;
+
+
     public virtual void OnPause()
     {
         m_IsPaused = true;
@@ -74,6 +77,17 @@ public class BallThrower : BaseEntity, IPauseEntity
         SetNextShot(m_PreviouseShotData);
     }
 
+    public void ActivateOnFireEffect(Material material)
+    {
+        m_IsOnFireEffectActive = true;
+        m_ThrowEntity.SetMaterial(material);
+    }
+    public void DisableOnFireEffect()
+    {
+        m_IsOnFireEffectActive = false;
+        m_ThrowEntity.ResetDefaultMaterial();
+    }
+
     protected virtual void Awake()
     {
         m_ThrowEntity.OnReadyToBeShot += CallThrowerReady;
@@ -86,7 +100,7 @@ public class BallThrower : BaseEntity, IPauseEntity
 
     protected void ThrowEntity(Vector3 force)
     {
-        m_ThrowEntity.Shoot(force, this);
+        m_ThrowEntity.Shoot(force, this, m_IsOnFireEffectActive);
     }
 
     protected void CallThrowerReady(ShotStatus status)

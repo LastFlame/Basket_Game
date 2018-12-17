@@ -87,6 +87,12 @@ public class ScoreManager : BaseEntity
     private void OnBallScore(BallShotData scoreInformation)
     {
         int nShotScore = GetScoreFromStatus(scoreInformation.status);
+
+        if(scoreInformation.isOnFire)
+        {
+            nShotScore *= Constant.ON_FIRE_SCORE_MULTIPLIER;
+        }
+
         BallThrower thrower = scoreInformation.thrower;
         
         int nThrowerTotalScore = 0;

@@ -4,16 +4,18 @@ public struct BallShotData
 {
     public BallThrower thrower;
     public ShotStatus status;
+    public bool isOnFire;
 
     public static BallShotData Default
     {
-        get { return new BallShotData(null, ShotStatus.NONE); }
+        get { return new BallShotData(null, ShotStatus.NONE, false); }
     }
 
-    public BallShotData(BallThrower thrower, ShotStatus status)
+    public BallShotData(BallThrower thrower, ShotStatus status, bool isOnFire)
     {
         this.thrower = thrower;
         this.status = status;
+        this.isOnFire = isOnFire;
     }
 
 }
@@ -38,6 +40,8 @@ public class BallEntity : BaseEntity, IPauseEntity
     }
 
     private Rigidbody m_EntityRb = null;
+    private MeshRenderer m_Renderer = null;
+    private Material m_DefaultMaterial = null;
 
     private Vector3 m_BeforePauseVelocity = Vector3.zero;
     private Vector3 m_BeforePauseAngularVelocity = Vector3.zero;
@@ -78,7 +82,7 @@ public class BallEntity : BaseEntity, IPauseEntity
         m_EntityRb.angularVelocity = m_BeforePauseAngularVelocity;
     }
 
-    public void Shoot(Vector3 force, BallThrower thrower)
+    public void Shoot(Vector3 force, BallThrower thrower, bool isOnFireEffect)
     {
         //enable the gravity on the entity when the user decide to stops the interaction with this entity.
         m_EntityRb.useGravity = true;
@@ -87,8 +91,8 @@ public class BallEntity : BaseEntity, IPauseEntity
         m_EntityRb.AddRelativeForce(force, ForceMode.Impulse);
 
         m_CurrentThrowScore.thrower = thrower;
-
         m_CurrentThrowScore.status = ShotStatus.NONE;
+        m_CurrentThrowScore.isOnFire = isOnFireEffect;
     }
 
     public void ResetPosition(ShotData data)
@@ -112,9 +116,21 @@ public class BallEntity : BaseEntity, IPauseEntity
         CallEvent(OnReadyToBeShot, m_CurrentThrowScore.status);
     }
 
+    public void SetMaterial(Material material)
+    {
+        m_Renderer.material = material;
+    }
+
+    public void ResetDefaultMaterial()
+    {
+        m_Renderer.material = m_DefaultMaterial;
+    }
+
     private void Awake()
     {
         base.GetCriticalComponent(out m_EntityRb);
+        base.GetCriticalComponent(out m_Renderer);
+        m_DefaultMaterial = m_Renderer.material;
     }
 
     private void Start()
