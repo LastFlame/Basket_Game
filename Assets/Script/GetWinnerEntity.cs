@@ -15,7 +15,7 @@
             matchWinner = WinnerGUI.Winner.PLAYER;
         }
 
-        WinnerGUI.SetWinnerGUI(matchWinner);
+        WinnerGUI.MatchWinner = matchWinner;
     }
 
     

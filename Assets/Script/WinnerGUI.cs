@@ -11,9 +11,15 @@ public class WinnerGUI : BaseEntity
     }
 
     private static Winner m_MatchWinner = Winner.PLAYER;
+    public static Winner MatchWinner
+    {
+        get { return m_MatchWinner; }
+
+        set { m_MatchWinner = value; }
+    }
 
     [SerializeField]
-    private Image m_Winner = null;
+    private Text m_Victory = null;
     
 
     [SerializeField]
@@ -25,50 +31,45 @@ public class WinnerGUI : BaseEntity
     [SerializeField]
     private Vector3 m_WinnerImageOffset = Vector3.zero;
 
-    private RectTransform m_WinnerRect = null;
+    private RectTransform m_VictoryRect = null;
 
-    public static void SetWinnerGUI(Winner winner)
-    {
-        m_MatchWinner = winner;
-    }
 
     private void Start()
     {
-
         if(m_MatchWinner == Winner.DRAW)
         {
             return;
         }
 
-        m_Winner.enabled = true;
+        m_Victory.enabled = true;
 
-        m_WinnerRect = m_Winner.GetComponent<RectTransform>();
+        m_VictoryRect = m_Victory.GetComponent<RectTransform>();
 
-        m_WinnerRect.localPosition = SelectWinnerRect();
+        RectTransform winnerRect = SelectWinnerRect();
+
+        m_VictoryRect.localPosition = SetWinnerImageV3(winnerRect);
        
     }
     
-    private Vector3 SelectWinnerRect()
+    private RectTransform SelectWinnerRect()
     {
-        Vector3 retRect = m_PlayerImageTransform.localPosition;
+        RectTransform selectedRectTransform = m_PlayerImageTransform;
 
         if(m_MatchWinner == Winner.AI)
         {
-            retRect = m_AiImageTransform.localPosition;
+            selectedRectTransform = m_AiImageTransform;
         }
 
-        return retRect;
+        return selectedRectTransform;
     }
 
     private Vector3 SetWinnerImageV3(RectTransform winnerRect)
     {
         Vector3 retV3 = Vector3.zero;
 
-        retV3 = winnerRect.localPosition + Vector3.up * winnerRect.sizeDelta.y;
-
+        retV3 = winnerRect.localPosition + Vector3.up * winnerRect.sizeDelta.y / 2f;
         retV3 = retV3 + m_WinnerImageOffset;
-
-
+        
         return retV3;
     }
 }
