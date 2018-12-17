@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class FireBallGUI : BaseEntity, IPauseEntity
 {
@@ -20,6 +21,13 @@ public class FireBallGUI : BaseEntity, IPauseEntity
 
     [SerializeField]
     private Material m_OnFireBallMaterial = null;
+
+    [SerializeField]
+    private UnityEvent m_OnFireBallEffectActivationEvent = null;
+
+    [SerializeField]
+    private UnityEvent m_OnFireBallEffectOverEvent = null;
+
 
     private bool m_IsPaused = false;
     public bool IsPaused
@@ -61,7 +69,10 @@ public class FireBallGUI : BaseEntity, IPauseEntity
     {
         while (m_FireBallSlider.value > 0)
         {
-            m_FireBallSlider.value -= decreaseMultiplier * Time.deltaTime;
+            if (!m_IsPaused)
+            {
+                m_FireBallSlider.value -= decreaseMultiplier * Time.deltaTime;
+            }
             yield return null;
         }
 
@@ -92,6 +103,8 @@ public class FireBallGUI : BaseEntity, IPauseEntity
         m_ThrowerEntity.OnThrowEntityReady -= ShotFailedOnFireEffectActive;
         m_ThrowerEntity.DisableOnFireEffect();
         m_FireBallSlider.value = 0;
+
+        m_OnFireBallEffectOverEvent.Invoke();
     }
 
     private void IncreaseSliderValue(ScoreData data)
@@ -126,6 +139,8 @@ public class FireBallGUI : BaseEntity, IPauseEntity
             m_ThrowerEntity.ActivateOnFireEffect(m_OnFireBallMaterial);
 
             m_ThrowerEntity.OnThrowEntityReady += ShotFailedOnFireEffectActive;
+
+            m_OnFireBallEffectActivationEvent.Invoke();
 
             StartCoroutine(m_DecreaseSliderOnFireEffect = DecreaseSliderValue(m_DecreaseSliderValueOnFireStatus, () =>
             {
