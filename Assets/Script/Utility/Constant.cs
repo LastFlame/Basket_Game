@@ -17,7 +17,8 @@
     {
         MAIN_MENU,
         SOLO_PRATICE,
-        SHOOTING_RACE
+        SHOOTING_RACE,
+        REWARD
     }
 
     public enum AIDifficulty
