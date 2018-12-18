@@ -11,6 +11,7 @@ public class CountDownGUI : BaseEntity
 
     private void Awake()
     {
+#if UNITY_EDITOR
         if(m_ElapsedTime == null)
         {
             LogCriticalError("MISSING ELAPSED TIME REF ON {0}", this.gameObject.name.ToUpper());
@@ -22,7 +23,7 @@ public class CountDownGUI : BaseEntity
             LogCriticalError("MISSING FRAME IMAGE REF ON {0}", this.gameObject.name.ToUpper());
             return;
         }
-
+#endif
         m_ElapsedTime.enabled = true;
         m_FrameImage.enabled = true;
 

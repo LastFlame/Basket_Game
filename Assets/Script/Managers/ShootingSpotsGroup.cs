@@ -15,6 +15,7 @@ public class ShootingSpotsGroup : BaseEntity
 
     private void Awake()
     {
+#if UNITY_EDITOR
         if (m_TrDestinationPoint == null)
         {
             LogCriticalError("TARGET DESTINATION ON {0} IS NULL", this.gameObject.name.ToUpper());
@@ -26,6 +27,7 @@ public class ShootingSpotsGroup : BaseEntity
             LogCriticalError("BALL THROWER ON {0} IS NULL", this.gameObject.name.ToUpper());
             return;
         }
+#endif
 
         m_ShootingSpots = transform.GetComponentsInChildren<ShootingSpotEntity>();
         m_BallThrower.OnThrowEntityReady += SetThrowParameters;

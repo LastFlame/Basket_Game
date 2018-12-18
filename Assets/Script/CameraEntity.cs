@@ -24,11 +24,13 @@ public class CameraEntity : BaseEntity
 
     private void Awake()
     {
+#if UNITY_EDITOR
         if(m_CameraToMove == null)
         {
             base.LogCriticalError("MISSING CAMERA TO MOVE REF ON {0}", this.gameObject.name.ToUpper());
             return;
         }
+#endif
 
         m_OnBallThrownLateUpdate = LateUpdateCoroutine();
         UserBallThrower.OnShotDataSet += OnUserThrowerReadyToShot;

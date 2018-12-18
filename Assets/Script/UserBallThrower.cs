@@ -37,8 +37,14 @@ public class UserBallThrower : BallThrower
     protected override void Awake()
     {
         base.Awake();
-        m_InputObserver = new InputObserver(new InputObserverData(HandledInputs.KEY_R, ResetShotDebug),
-                                            new InputObserverData(HandledInputs.KEY_D, DebugPerfectShot));
+
+        m_InputObserver = new InputObserver();
+
+#if UNITY_EDITOR
+        m_InputObserver.RequireInputNotification(new InputObserverData(HandledInputs.KEY_R, ResetShotDebug),
+                                                 new InputObserverData(HandledInputs.KEY_D, DebugPerfectShot));
+#endif
+
 
     }
 

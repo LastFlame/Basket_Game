@@ -22,12 +22,13 @@ public class SubtractMoneyGUI : BaseEntity
 
     private void Awake()
     {
-        if(m_MoneyCount == null)
+#if UNITY_EDITOR
+        if (m_MoneyCount == null)
         {
             LogCriticalError("MONEY COUNT REF ON {0} IS NULL", this.gameObject.name.ToUpper());
             return;
         }
-
+#endif
         OnMoneyCountAnimationOver += NotifyOnMoneyCountAnimationOverEvent;
     }
 

@@ -11,13 +11,17 @@ public class CollisionEntity : BaseEntity
     {
         CallEvent(OnTriggerEvent, other);
 
+#if UNITY_EDITOR
         LogMessage("Trigger");
+#endif
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         CallEvent(OnCollisionEvent, collision);
 
+#if UNITY_EDITOR
         LogMessage("Collision");
+#endif
     }
 }

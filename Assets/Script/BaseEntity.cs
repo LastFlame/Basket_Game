@@ -58,9 +58,11 @@ public class BaseEntity : MonoBehaviour
     {
         componentRef = this.GetComponentInChildren<T>();
 
+#if UNITY_EDITOR
         if(componentRef == null)
         {
             LogCriticalError("{0} CAN'T FIND {1} COMPONENT ON THE GAME OBJECT", this.gameObject.name.ToUpper(), componentRef.GetType().ToString().ToUpper());
         }
+#endif
     }
 }
