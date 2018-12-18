@@ -6,12 +6,8 @@ public class SubtractMoneyGUI : BaseEntity
 {
     public event System.Action OnMoneyCountAnimationOver = null;
 
-
     [SerializeField]
     private Text m_MoneyCount = null;
-
-    [SerializeField]
-    private int m_TotalMoney = 1000;
 
     [SerializeField]
     private float m_TimeToCompleteAnimation = 5f;
@@ -33,7 +29,7 @@ public class SubtractMoneyGUI : BaseEntity
 
     private void Start()
     {
-        m_MoneyCount.text = m_TotalMoney.ToString();
+        m_MoneyCount.text = Constant.BET_MONEY.ToString();
 
         StartCoroutine(SubtractMoneyUpdate());
     }
@@ -55,13 +51,14 @@ public class SubtractMoneyGUI : BaseEntity
 
     private System.Collections.IEnumerator SubtractMoneyUpdate()
     {
-        int moneySubtraction = (int)(m_TotalMoney / m_TimeToCompleteAnimation);
-        int maxMoney = m_TotalMoney;
+        int moneySubtraction = (int)(Constant.BET_MONEY / m_TimeToCompleteAnimation);
+        int maxMoney = Constant.BET_MONEY;
+        float currentAnimMoney = maxMoney;
 
-        while(m_TotalMoney > 0)
+        while(currentAnimMoney > 0)
         {
-            m_TotalMoney = Mathf.Clamp(m_TotalMoney -= (int)(moneySubtraction * Time.deltaTime), 0, maxMoney);
-            m_MoneyCount.text = m_TotalMoney.ToString();
+            currentAnimMoney = Mathf.Clamp(currentAnimMoney -= (int)(moneySubtraction * Time.deltaTime), 0, maxMoney);
+            m_MoneyCount.text = currentAnimMoney.ToString();
             yield return null;
         }
 

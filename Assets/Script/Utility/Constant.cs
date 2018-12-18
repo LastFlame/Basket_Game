@@ -28,6 +28,9 @@
 
     public const string MOVING_SCORE_TEMPLATE = "+{0} pts!";
     public const int ON_FIRE_SCORE_MULTIPLIER = 2;
+    public const int BET_MONEY = 1000;
+
+    public static int PLAYER_MONEY = 1000;
 
     public static UnityEngine.Vector3 GetProjectileVelocity(UnityEngine.Vector3 destinationV3, UnityEngine.Vector3 startV3, float maxHeight)
     {

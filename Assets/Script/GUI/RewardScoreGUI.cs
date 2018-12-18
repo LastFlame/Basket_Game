@@ -46,6 +46,9 @@ public class RewardScoreGUI : BaseEntity
         if(nAiScore < nPlayerScore)
         {
             victoryRect.localPosition = SetWinnerImageV3(m_PlayerImageTransform);
+
+            //temp hack
+            Constant.PLAYER_MONEY += Constant.BET_MONEY;
             return;
         }
 
