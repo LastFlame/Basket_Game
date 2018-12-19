@@ -85,7 +85,7 @@ public class UserBallThrower : BallThrower
         //set a minimun mouse offset to be reached before throwing the ball.
         //this offset allows the user to press on the screen within a range without
         //shooting the ball.
-        m_PreviouseMouseDeltaMagnitude = 0.5f;
+        m_PreviouseMouseDeltaMagnitude = 20f;
 
         //remove left mouse button pressed from the notification of the input manager,
         //because we don't need it anymore until the next shot.
@@ -141,12 +141,10 @@ public class UserBallThrower : BallThrower
             //store the previous mouse delta magnitude for the next frame.
             m_PreviouseMouseDeltaMagnitude = currentMouseMagnitude;
 
-            //m_CurrentForceV3 =  (m_PreviouseShotData.forceToScoreV3.normalized * m_PreviousMouseDelta.y) / m_MouseOffsetMultiplier/* + (Vector3.right * (m_PreviousMouseDelta.x / m_MouseOffsetMultiplier))*/;
-
             //the force to apply on the ball is calcutated by getting the direction of the "perfect force for this shot",
             //multiplied by the "minimum force magnitude" for this shot, plus the overall mouse y delta and mouse x delta
             //(devided by a multiplier to avoid crazy delta numbers).
-            m_CurrentForceV3 = m_PreviouseShotData.forceToScoreV3.normalized * (m_PreviouseShotData.forceMinMagnitude + (currentMouseDeltaV2.y / m_MouseOffsetMultiplier));
+            m_CurrentForceV3 = m_PreviouseShotData.forceToScoreV3.normalized * (m_PreviouseShotData.forceMinMagnitude + (currentMouseDeltaV2.y / m_MouseOffsetMultiplier)) + (Vector3.right * (currentMouseDeltaV2.x / m_MouseOffsetMultiplier));
 
             //the force magnitude to apply is clamped to a max force for this shot.
             //this allows us to predict where the ball will be on max force, and
