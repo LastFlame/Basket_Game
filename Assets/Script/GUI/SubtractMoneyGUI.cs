@@ -32,6 +32,15 @@ public class SubtractMoneyGUI : BaseEntity
     {
         m_MoneyCount.text = Constant.BET_MONEY.ToString();
 
+        //temp HACK
+        ScoreManager.Score lastMatchScore = ScoreManager.RetriveMatchScore();
+        if(lastMatchScore.AIScore == lastMatchScore.playerScore)
+        {
+
+            CallEvent(OnMoneyCountAnimationOver);
+            return;
+        }
+
         StartCoroutine(SubtractMoneyUpdate());
     }
 
